@@ -54,7 +54,7 @@ void Runtime::add(const std::string& question, const std::string& answer) {
     }
 
     int choice;
-    std::cout << "Question already exists, do you want to update this one?\n";
+    std::cout << "Bot: Question already exists, do you want to update this one?\n";
     std::cout << "1. Yes\n2. No\n";
     std::cin >> choice;
 
@@ -85,16 +85,102 @@ void Runtime::remove(const std::string& question) {
     }
 }
 
+void Runtime::handle_command(const std::string& input) {
+    int pos = input.find(" ");
+    std::string command = input.substr(0, pos);
+    std::string args;
+
+    if (pos != std::string::npos) {
+        args = input.substr(pos + 1);
+    }
+
+    utils::trim(command);
+    utils::trim(args);
+
+    if (!std::ranges::contains(commands, command)) {
+        std::printf("Bot: Command %s does not exist\n\n", command.c_str());
+        return;
+    }
+
+    if (command == "/add") {
+        pos = args.find(" ");
+        if (pos == std::string::npos) {
+            std::printf("Bot: Command %s requires 2 args\n\n", command.c_str());
+            return;
+        }
+
+        std::string question = args.substr(0, pos);
+        std::string answer = args.substr(pos);
+        add(question, answer);
+        return;
+    }
+
+    if (input == "/update") {
+        pos = args.find(" ");
+        if (pos == std::string::npos) {
+            std::printf("Bot: Command %s requires 2 args\n\n", command.c_str());
+            return;
+        }
+
+        std::string question = args.substr(0, pos);
+        std::string answer = args.substr(pos);
+        update(question, answer);
+        return;
+    }
+
+    if (input == "/remove") {
+        std::string question = args.substr(0, pos);
+        remove(question);
+        return;
+    }
+
+    if (input == "/exit") {
+        is_running = false;
+        return;
+    }
+}
+
+void Runtime::handle_question(const std::string& input) {
+    if (!question_exists(input)) {
+        std::printf("Bot: I don't know\n\n");
+        return;
+    }
+
+    for (auto& question : questions) {
+        if (question.question == input) {
+            std::printf("Bot: %s\n\n", question.answer.c_str());
+            return;
+        }
+    }
+}
+
+void change_line(int position, std::string line) {
+    std::cout << std::format("\x1b[{}A", position);
+    std::cout << "\x1b[2K";
+    std::cout << line;
+    std::cout << std::format("\x1b[{}B", position);
+    std::cout << "\x1b[0G";
+}
+
+std::string handle_input() {
+    std::string input;
+    std::getline(std::cin, input);
+    utils::trim(input);
+    change_line(1, std::format("You: {}", input));
+
+    return input;
+}
+
 void Runtime::run() {
-    bool is_running = true;
+    std::cout << "Welcome to chat!\n\n";
 
     while (is_running) {
-        std::string input;
-        std::cin >> input;
-        utils::trim(input);
+        std::string input = handle_input();
 
-        if (input == "/exit") {
-            is_running = false;
+        if (input.starts_with("/")) {
+            handle_command(input);
+        } else {
+            handle_question(input);
         }
     }
 }

@@ -3,6 +3,8 @@
 
 #include <array>
 #include <filesystem>
+#include <print>
+#include <ranges>
 #include <string>
 #include <vector>
 
@@ -19,6 +21,7 @@ struct Question {
 
 class Runtime {
    private:
+    bool is_running;
     std::filesystem::path path;
     std::vector<Question> questions;
 
@@ -38,10 +41,15 @@ class Runtime {
 
     void remove(const std::string& question);
 
+    void handle_command(const std::string& input);
+
+    void handle_question(const std::string& input);
+
    public:
     Runtime(const std::string& path) {
-        this->path = std::filesystem::path(path);
+        this->is_running = true;
         this->questions = {};
+        this->path = std::filesystem::path(path);
         this->load();
     }
 

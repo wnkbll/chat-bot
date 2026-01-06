@@ -10,7 +10,7 @@ SRC_PATH = ROOT_PATH / "src"
 BUILD_PATH = ROOT_PATH / "build"
 OBJ_PATH = BUILD_PATH / "obj"
 HASH_PATH = BUILD_PATH / "hash.json"
-EXECUTABLE_PATH = BUILD_PATH / "convert"
+EXECUTABLE_PATH = BUILD_PATH / "chat"
 
 
 class JsonReader:

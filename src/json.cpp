@@ -3,7 +3,7 @@
 namespace json {
 void write(const json_t& data, const std::string& path) {
     std::ofstream file(path);
-    file << data << '\n';
+    file << std::setw(4) << data << '\n';
     file.close();
 }
 

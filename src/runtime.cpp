@@ -140,7 +140,14 @@ void Runtime::handle_command(const std::string& input) {
     }
 
     if (command == "/remove") {
-        std::string question = args.substr(0, pos);
+        std::string question;
+        bool is_valid = utils::parse_args(args, question);
+
+        if (!is_valid) {
+            std::printf("Bot: Command /remove requires 1 arg, included in \"\n\n");
+            return;
+        }
+
         remove(question);
         return;
     }

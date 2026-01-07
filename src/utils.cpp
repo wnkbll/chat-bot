@@ -29,4 +29,22 @@ void replace_line(int pos, const std::string& line) {
     std::cout << std::format("\x1b[{}B", pos);
     std::cout << "\x1b[0G";
 }
+
+bool parse_args(const std::string& args, std::string& question, std::string& answer) {
+    int pos_opener = args.find("\"");
+    int pos_closer = args.find("\"", pos_opener + 1);
+    if (pos_opener == std::string::npos || pos_closer == std::string::npos) {
+        return false;
+    }
+    question = args.substr(pos_opener + 1, pos_closer - pos_opener - 1);
+
+    pos_opener = args.find("\"", pos_closer + 1);
+    pos_closer = args.find("\"", pos_opener + 1);
+    if (pos_opener == std::string::npos || pos_closer == std::string::npos) {
+        return false;
+    }
+    answer = args.substr(pos_opener + 1, pos_closer - pos_opener - 1);
+
+    return true;
+}
 }  // namespace utils

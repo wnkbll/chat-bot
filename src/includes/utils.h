@@ -14,6 +14,8 @@ void trim(std::string& s);
 
 void replace_line(int pos, const std::string& line);
 
+bool parse_args(const std::string& args, std::string& question);
+
 bool parse_args(const std::string& args, std::string& question, std::string& answer);
 }  // namespace utils
 

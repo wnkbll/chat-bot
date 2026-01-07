@@ -41,6 +41,8 @@ class Runtime {
 
     void remove(const std::string& question);
 
+    std::string handle_input();
+
     void handle_command(const std::string& input);
 
     void handle_question(const std::string& input);

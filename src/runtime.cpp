@@ -85,6 +85,15 @@ void Runtime::remove(const std::string& question) {
     }
 }
 
+std::string Runtime::handle_input() {
+    std::string input;
+    std::getline(std::cin, input);
+    utils::trim(input);
+    utils::replace_line(1, std::format("You: {}", input));
+
+    return input;
+}
+
 void Runtime::handle_command(const std::string& input) {
     int pos = input.find(" ");
     std::string command = input.substr(0, pos);
@@ -103,38 +112,40 @@ void Runtime::handle_command(const std::string& input) {
     }
 
     if (command == "/add") {
-        pos = args.find(" ");
-        if (pos == std::string::npos) {
-            std::printf("Bot: Command %s requires 2 args\n\n", command.c_str());
+        std::string question, answer;
+        bool is_valid = utils::parse_args(args, question, answer);
+
+        if (!is_valid) {
+            std::printf("Bot: Command %s requires 2 args, included in \"\n\n",
+                        command.c_str());
             return;
         }
 
-        std::string question = args.substr(0, pos);
-        std::string answer = args.substr(pos);
         add(question, answer);
         return;
     }
 
-    if (input == "/update") {
-        pos = args.find(" ");
-        if (pos == std::string::npos) {
-            std::printf("Bot: Command %s requires 2 args\n\n", command.c_str());
+    if (command == "/update") {
+        std::string question, answer;
+        bool is_valid = utils::parse_args(args, question, answer);
+
+        if (!is_valid) {
+            std::printf("Bot: Command %s requires 2 args, included in \"\n\n",
+                        command.c_str());
             return;
         }
 
-        std::string question = args.substr(0, pos);
-        std::string answer = args.substr(pos);
         update(question, answer);
         return;
     }
 
-    if (input == "/remove") {
+    if (command == "/remove") {
         std::string question = args.substr(0, pos);
         remove(question);
         return;
     }
 
-    if (input == "/exit") {
+    if (command == "/exit") {
         is_running = false;
         return;
     }
@@ -152,23 +163,6 @@ void Runtime::handle_question(const std::string& input) {
             return;
         }
     }
-}
-
-void change_line(int position, std::string line) {
-    std::cout << std::format("\x1b[{}A", position);
-    std::cout << "\x1b[2K";
-    std::cout << line;
-    std::cout << std::format("\x1b[{}B", position);
-    std::cout << "\x1b[0G";
-}
-
-std::string handle_input() {
-    std::string input;
-    std::getline(std::cin, input);
-    utils::trim(input);
-    change_line(1, std::format("You: {}", input));
-
-    return input;
 }
 
 void Runtime::run() {

@@ -21,4 +21,12 @@ void trim(std::string& s) {
     left_trim(s);
     right_trim(s);
 }
+
+void replace_line(int pos, const std::string& line) {
+    std::cout << std::format("\x1b[{}A", pos);
+    std::cout << "\x1b[2K";
+    std::cout << line;
+    std::cout << std::format("\x1b[{}B", pos);
+    std::cout << "\x1b[0G";
+}
 }  // namespace utils

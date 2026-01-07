@@ -178,6 +178,15 @@ void Runtime::handle_command(const std::string& input) {
         return;
     }
 
+    if (command == "/list") {
+        std::printf("Bot: Here is your list of questions and answers\n\n");
+        for (const auto& question : questions) {
+            std::printf("Q: %s\n", question.question.c_str());
+            std::printf("A: %s\n\n", question.answer.c_str());
+        }
+        return;
+    }
+
     if (command == "/exit") {
         is_running = false;
         std::printf("Bot: Bye bye!\n");

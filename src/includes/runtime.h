@@ -25,7 +25,8 @@ class Runtime {
     std::filesystem::path path;
     std::vector<Question> questions;
 
-    const std::array<std::string, 4> commands = {"/add", "/update", "/remove", "/exit"};
+    const std::array<std::string, 5> commands = {"/add", "/update", "/remove", "/list",
+                                                 "/exit"};
 
     bool question_exists(const std::string& question);
 

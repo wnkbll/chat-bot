@@ -50,36 +50,62 @@ void Runtime::add(const std::string& question, const std::string& answer) {
         auto obj = Question(question, answer);
         questions.push_back(obj);
         save();
+        std::printf("Bot: Question \"%s\" successfully added \n\n", question.c_str());
         return;
     }
 
-    int choice;
     std::cout << "Bot: Question already exists, do you want to update this one?\n";
     std::cout << "1. Yes\n2. No\n";
-    std::cin >> choice;
+    std::string input;
+    std::getline(std::cin, input);
+    
 
-    if (choice == 1) update(question, answer);
+    int choice = 0;
+
+    try {
+        choice = std::stoi(input);
+    } catch (const std::invalid_argument& e) {
+        utils::replace_line(1, "You: are stupid");
+        return;
+    }
+
+    if (choice == 1) {
+        utils::replace_line(1, "You: Yes");
+        update(question, answer);
+    } else {
+        utils::replace_line(1, "You: No");
+    }
 }
 
 void Runtime::update(const std::string& question, const std::string& answer) {
-    if (!question_exists(question)) return;
+    if (!question_exists(question)) {
+        std::printf("Bot: Question \"%s\" does not exist\n\n", question.c_str());
+        return;
+    }
 
     for (auto& obj : questions) {
         if (obj.question == question) {
             obj.answer = answer;
             save();
+            std::printf("Bot: Question \"%s\" successfully updated \n\n",
+                        question.c_str());
             return;
         }
     }
 }
 
 void Runtime::remove(const std::string& question) {
-    if (!question_exists(question)) return;
+    if (!question_exists(question)) {
+        std::printf("Bot: Question \"%s\" does not exist\n\n", question.c_str());
+        return;
+    }
 
     for (int i = 0; i < questions.size(); i++) {
         if (questions[i].question == question) {
             questions.erase(questions.begin() + i);
             save();
+            std::printf("Bot: Question \"%s\" successfully removed\n\n",
+                        question.c_str());
             return;
         }
     }
@@ -154,6 +180,7 @@ void Runtime::handle_command(const std::string& input) {
 
     if (command == "/exit") {
         is_running = false;
+        std::printf("Bot: Bye bye!\n");
         return;
     }
 }

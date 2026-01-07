@@ -179,6 +179,11 @@ void Runtime::handle_command(const std::string& input) {
     }
 
     if (command == "/list") {
+        if (questions.empty()) {
+            std::printf("Bot: List is empty\n\n");
+            return;
+        }
+
         std::printf("Bot: Here is your list of questions and answers\n\n");
         for (const auto& question : questions) {
             std::printf("Q: %s\n", question.question.c_str());

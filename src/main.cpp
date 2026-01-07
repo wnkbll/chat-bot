@@ -1,11 +1,6 @@
 #include "includes/runtime.h"
 
 bool is_valid_path(const std::filesystem::path& path) {
-    if (!std::filesystem::exists(path)) {
-        std::printf("%s does not exist, use ./data.json instead\n", path.c_str());
-        return false;
-    }
-
     if (std::filesystem::is_directory(path)) {
         std::printf("%s is directory, use ./data.json instead\n", path.c_str());
         return false;
